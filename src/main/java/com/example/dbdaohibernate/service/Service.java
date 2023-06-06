@@ -3,6 +3,7 @@ package com.example.dbdaohibernate.service;
 import com.example.dbdaohibernate.model.Person;
 import com.example.dbdaohibernate.repository.Repository;
 import java.util.List;
+import java.util.Optional;
 
 @org.springframework.stereotype.Service
 public class Service {
@@ -11,8 +12,17 @@ public class Service {
     public Service(Repository repository) {
         this.repository = repository;
     }
+
     public List getPersonsByCity(String city) {
-        return repository.getPersonsByCity(city);
+        return repository.findByCityOfLivingContaining(city);
+    }
+
+    public List getPersonsWithAgeLessThen(Integer age) {
+        return repository.findByAgeLessThanOrderByAgeAsc(age);
+    }
+
+    public Optional<Person> getPersonByNameAndSurname(String name, String surname) {
+        return repository.findByNameAndSurname(name, surname);
     }
     public void get() {
         List<Person> persons = List.of(
@@ -39,6 +49,6 @@ public class Service {
                         .build()
         );
 
-        persons.forEach(x -> repository.run(x));
+        repository.saveAll(persons);
     }
 }
